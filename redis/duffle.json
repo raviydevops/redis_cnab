@@ -1,0 +1,32 @@
+{
+    "name": "redis",
+    "version": "0.1.0",
+    "description": "redis bundle",
+    "keywords": [
+        "redis",
+        "cnab"
+    ],
+    "maintainers": [
+        {
+            "name": "Ravi Teja Yaramati",
+            "email": "raviydevops@gmail.com"
+        }
+    ],
+    "invocationImages": {
+        "cnab": {
+            "name": "cnab",
+            "builder": "docker",
+            "configuration": {
+                "registry": "raviydevops"
+            }
+        }
+    },
+    "images": [
+        {
+          "image": "raviydevops/redis_invocation:1.0.0",
+          "description": "redis"
+        }
+      ],
+      "parameters": {},
+      "credentials": {}
+}

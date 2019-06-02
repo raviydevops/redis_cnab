@@ -1,0 +1,67 @@
+#!/bin/bash
+# action=$CNAB_ACTION
+
+# if [[ action == "install" ]]; then
+# echo "hey I am installing things over here"
+# elif [[ action == "uninstall" ]]; then
+# echo "hey I am uninstalling things now"
+# fi
+
+
+
+
+# helm init
+# helm repo update
+export KUBECONFIG="/root/.kube/config"
+action=$CNAB_ACTION
+
+# echo "KUBECONFIG: ${KUBECONFIG}"
+chmod +x /cnab/app/start_services.sh
+/cnab/app/start_services.sh
+cd /cnab/app
+
+case $action in
+    install)
+
+    echo "Install action"
+    # helm init
+    # sleep 2
+    helm repo update
+    helm install stable/redis --name redis -f values.yaml
+    export REDIS_PASSWORD=$(kubectl get secret --namespace default redis -o jsonpath="{.data.redis-password}" | base64 --decode)
+    for script in /etc/profile.d/*.sh ; do
+        if [ -r $script ] ; then
+                . $script
+        fi
+    done
+    echo "To connect to your database execute the following commands:"
+    echo "redis-cli -h 127.0.0.1 -p 6379 -a $REDIS_PASSWORD"
+    kubectl port-forward --namespace default svc/redis-master 6380:6379
+    ;;
+
+    uninstall)
+
+    echo "Uninstall action"
+    helm delete --purge redis
+    k3d delete --name k3s_custom
+    ;;
+
+    upgrade)
+    echo "Upgrade action"
+    ;;
+
+    downgrade)
+    echo "Downgrade action"
+    ;;
+
+    status)
+    echo "Status action"
+    helm list --all
+    ;;
+
+    *)
+    echo "No action for $action"
+    ;;
+esac
+
+echo "$action completed"

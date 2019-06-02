@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "v1.0.0-WD",
+  "name": "redis-bundle",
+  "version": "1.0.0",
+  "description": "bundle for redis",
+  "invocationImages": [
+    {
+      "imageType": "docker",
+      "image": "raviydevops/redis:1.0.0"
+    }
+  ],
+  "images": [
+    {
+      "image": "raviydevops/crud-redis_invocation:1.0.0",
+      "description": "redis invocation image"
+    }
+  ],
+  "parameters": {},
+  "credentials": {}
+}
